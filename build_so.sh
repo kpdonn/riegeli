@@ -250,7 +250,7 @@ OBJS=("$OUTDIR"/*.o)
 $CXX -shared -o "$OUTDIR/../_riegeli_dataset_ops.so" "${OBJS[@]}" \
     -Wl,--version-script="$GEN/hide_all.lds" \
     -L"$TF_DIR" -l:libtensorflow_framework.so.2 \
-    -lpthread -lz
+    -static-libstdc++ -lpthread -lz
 
 echo "=== Done ==="
 ls -la "$OUTDIR/../_riegeli_dataset_ops.so"
