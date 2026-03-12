@@ -237,7 +237,7 @@ ZSTD_C_SRCS=(
 
 ZSTD_CFLAGS=(-I "$ZSTD_DIR" -I "$ZSTD_DIR/common" -DZSTD_MULTITHREAD -DXXH_NAMESPACE=ZSTD_)
 
-FAILED=0
+FAILDIR=$(mktemp -d)
 
 compile_cc() {
     local src="$1"
@@ -247,7 +247,7 @@ compile_cc() {
         echo "  OK: $(basename $src)"
     else
         echo "  FAIL: $src"
-        FAILED=1
+        touch "$FAILDIR/failed"
     fi
 }
 
@@ -259,7 +259,7 @@ compile_c() {
         echo "  OK: $(basename $src)"
     else
         echo "  FAIL: $src"
-        FAILED=1
+        touch "$FAILDIR/failed"
     fi
 }
 
@@ -289,10 +289,12 @@ done
 echo "Waiting for compilations..."
 wait
 
-if [ "$FAILED" -ne 0 ]; then
+if [ -f "$FAILDIR/failed" ]; then
     echo "=== SOME COMPILATIONS FAILED ==="
+    rm -rf "$FAILDIR"
     exit 1
 fi
+rm -rf "$FAILDIR"
 
 echo "=== All compilations done ==="
 echo "=== Linking ==="
