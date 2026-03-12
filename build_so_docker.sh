@@ -55,13 +55,15 @@ fetch_dep snappy \
     "snappy-1.2.0" \
     "7ee7540b23ae04df961af24309a55484e7016106e979f83323536a1322cedf1b"
 
-# snappy needs a generated config header — create a minimal one
+# snappy needs generated config headers — create minimal ones
 if [ ! -f "$DEPDIR/snappy/snappy-stubs-public.h" ]; then
     cat > "$DEPDIR/snappy/snappy-stubs-public.h" <<'SNAPPY_EOF'
 #ifndef THIRD_PARTY_SNAPPY_OPENSOURCE_SNAPPY_STUBS_PUBLIC_H_
 #define THIRD_PARTY_SNAPPY_OPENSOURCE_SNAPPY_STUBS_PUBLIC_H_
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <sys/uio.h>
 #define SNAPPY_MAJOR 1
 #define SNAPPY_MINOR 2
 #define SNAPPY_PATCHLEVEL 0
@@ -75,6 +77,14 @@ namespace snappy {
 }
 #endif
 SNAPPY_EOF
+fi
+if [ ! -f "$DEPDIR/snappy/config.h" ]; then
+    cat > "$DEPDIR/snappy/config.h" <<'CONFIG_EOF'
+#ifndef THIRD_PARTY_SNAPPY_OPENSOURCE_CONFIG_H_
+#define THIRD_PARTY_SNAPPY_OPENSOURCE_CONFIG_H_
+#define HAVE_SYS_UIO_H 1
+#endif
+CONFIG_EOF
 fi
 
 EXT="$DEPDIR"
