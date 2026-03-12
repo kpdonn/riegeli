@@ -7,6 +7,9 @@ set -e
 : "${RIEGELI_DIR:?Set RIEGELI_DIR to the riegeli source root}"
 : "${TF_DIR:?Set TF_DIR to the tensorflow package directory}"
 
+# Source files use relative paths — must run from the riegeli root
+cd "$RIEGELI_DIR"
+
 TF_INC="$TF_DIR/include"
 GEN="$RIEGELI_DIR/build_manual"
 OUTDIR="$RIEGELI_DIR/build_manual/obj"
